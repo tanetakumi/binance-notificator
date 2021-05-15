@@ -10,7 +10,7 @@ docker-compose
 
 Dockerfile
 
-LICENSE.md file
+LICENSE file
 
 extentions of VSCode Remote Containers
 
