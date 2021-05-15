@@ -27,3 +27,9 @@ RUN wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz && \
 RUN pip install TA-Lib
 
 RUN rm -R ta-lib ta-lib-0.4.0-src.tar.gz
+
+# requests
+RUN pip install requests
+
+# pandas
+RUN pip install pandas
