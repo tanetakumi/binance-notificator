@@ -33,3 +33,6 @@ RUN pip install requests
 
 # pandas
 RUN pip install pandas
+
+# discord
+RUN pip install -U discord.py

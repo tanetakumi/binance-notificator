@@ -75,3 +75,11 @@ def getBrands() -> list:
     df.reset_index(drop=True ,inplace = True)
     # print(df.dtypes)
     return df['symbol'].tolist()
+
+
+def main():
+    print("Hello")
+
+
+if __name__ == '__main__':
+    main()
