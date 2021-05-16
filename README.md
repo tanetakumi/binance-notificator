@@ -2,15 +2,18 @@
 
 ## What i need to learn
 
-.env file
+.env
 
-.gitignore file
+.gitignore
 
-docker-compose
+docker-compose.yml
 
 Dockerfile
 
-LICENSE file
+LICENSE
 
 extentions of VSCode Remote Containers
+
+
+## the project structure
 

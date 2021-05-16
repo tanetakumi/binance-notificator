@@ -10,7 +10,7 @@ import json
 
 # vRsi = talib.RSI(dataFrame['Close'],14)
 
-def chartTimeToInteger(chartTime):
+def chartTimeToInteger(chartTime) -> int:
     if chartTime == "1m":
         return 60
     elif chartTime == "5m":
@@ -27,7 +27,7 @@ def chartTimeToInteger(chartTime):
         return 0
 
 
-def getCandleData(symbol,chartTime,num):
+def getCandleData(symbol,chartTime,num) -> pd.DataFrame:
     chartTimeNum = chartTimeToInteger(chartTime)
     if chartTimeNum == 0:
         print("時間足入力エラー[1m,5m,15m,1h,4h,1d]")
@@ -54,7 +54,7 @@ def getCandleData(symbol,chartTime,num):
     return df
 
 
-def getCurrentPrices():
+def getCurrentPrices() -> pd.DataFrame:
     res = requests.get("https://api.binance.com/api/v3/ticker/price")
     # DataFrameの作成
     df = pd.read_json(json.dumps(res.json()))
@@ -63,6 +63,7 @@ def getCurrentPrices():
     df.reset_index(drop=True ,inplace = True)
     # print(df.dtypes)
     return df
+
 
 def getBrands() -> list:
     res = requests.get("https://api.binance.com/api/v3/ticker/price")
