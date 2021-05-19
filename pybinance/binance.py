@@ -105,11 +105,15 @@ if __name__ == '__main__':
     brands_list = \
     ['BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'BCCUSDT', 'NEOUSDT', 'LTCUSDT', 'QTUMUSDT', 'ADAUSDT', \
     'XRPUSDT', 'HOTUSDT', 'SHIBUSDT', 'TRUUSDT', 'XLMUSDT', 'LINKUSDT', 'TRXUSDT', 'ETCUSDT', \
-    'BANDUSDT', 'DAIUSDT', 'FTMUSDT', 'XEMUSDT', 'IRISUSDT' , 'KSMUSDT']
+    'BANDUSDT', 'DAIUSDT', 'FTMUSDT', 'XEMUSDT', 'ADAUSDT' , 'KSMUSDT']
     # print(brands_list)
 
     binance = Binance()
     # df = binance.getCandleData("dsads","4h",5)
     # print(len(df.index) == 0)
-    print(binance.getBrandsCandleData( ['IRISUSDT' , 'KSMUSDT']))
+    print(binance.findBrand('ADAUSDT'))
+    # print(binance.getBrandsCandleData( ['IRISUSDT' , 'KSMUSDT']))
     # print(binance.getBrands())
+
+    while True:
+        

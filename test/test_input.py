@@ -1,3 +1,6 @@
+import time
+from multiprocessing import Process
+
 import discord
 from multiprocessing import Manager
 from concurrent.futures import ProcessPoolExecutor
@@ -11,9 +14,8 @@ import os
 DISCORD_TOKEN = os.getenv('ACCESS_TOKEN')
 
 class Bot(discord.Client):
-    def __init__(self,brands_list):
+    def __init__(self):
         super().__init__()
-        self.brands = brands_list
 
     async def on_ready(self):
         print('Logged in as')
@@ -34,26 +36,39 @@ class Bot(discord.Client):
                 # await message.channel.send(m)
                 # return message.content
 
-
+class TestClass():
+    def test_f(self):
+        ctr = 0
+        while True:
+            ctr += 1
+            print("     ", ctr)
+            time.sleep(1.0)
+ 
+if __name__ == '__main__':
+    ## run function in the background
+    CT = Bot()
     
-if __name__ == "__main__":
-    manager = Manager()
-    # bot = Bot(manager.list())
     # loop = asyncio.get_event_loop()
-    # loop.run_until_complete(Bot(manager.list()).run("ODE1NTY4NDkxMDE2MzU1ODQw.YDuTWA.8r4a_aJ6c9F6oxNhHLkUn0DEa8A"))
-    # print(DISCORD_TOKEN)
-    # Bot(manager.list()).run(DISCORD_TOKEN)
+    # loop.run_forever(CT.start(DISCORD_TOKEN))
+    # p = Process(target=CT.run(DISCORD_TOKEN))
+    # p.start()
+ 
+ 
+     ## will not exit if function finishes, only when
+     ## "q" is entered, but this is just a simple exampleq
+    while True:
+        time.sleep(5)
+        print("Hello")
+             ## do something else
+"""
+stop_char=""
+while stop_char.lower() != "q":
+stop_char=input("Enter 'q' to quit ")
+if stop_char.lower() == "u":
     print("Hello")
+        ## do something else
+
+    print("terminate process")
+    if p.is_alive():
+        p.terminate()
 """
-    process_pool = [] # プロセス生成したい関数を登録
-    process_pool.append(Bot(manager.list()).run("ODE1NTY4NDkxMDE2MzU1ODQw.YDuTWA.8r4a_aJ6c9F6oxNhHLkUn0DEa8A")) # 引数に上記で作成した変数を与える
-
-    with ProcessPoolExecutor(max_workers=2) as executor: # max_workerは同時に動かすプロセスの最大数 Noneを指定するとコア数 * 4の値になる
-        for process in process_pool:
-            executor.submit(process) # submit関数で、list内の関数をプロセス生成
-"""
-
-    # bot.run("ODE1NTY4NDkxMDE2MzU1ODQw.YDuTWA.8r4a_aJ6c9F6oxNhHLkUn0DEa8A")
-    
-
-

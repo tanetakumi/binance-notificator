@@ -36,3 +36,6 @@ RUN pip install pandas
 
 # discord
 RUN pip install -U discord.py
+
+# dot-env
+RUN pip install python-dotenv
