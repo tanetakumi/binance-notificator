@@ -65,6 +65,16 @@ class Binance:
         # print(df.dtypes)
         return df
 
+    def getCurrentBrandPrices(self,brands_list) -> pd.DataFrame:
+        # 結果保存
+        result_df = pd.DataFrame(index=[], columns=brands_list)
+
+        df = self.getCurrentPrices()
+
+        # print(df.columns)
+        df.reset_index(drop=True ,inplace = True)
+        # print(df.dtypes)
+        return df
 
     def getBrands(self) -> list:
         res = requests.get("https://api.binance.com/api/v3/ticker/price")
@@ -80,12 +90,12 @@ class Binance:
     def findBrand(self,brand) -> bool:
         return brand in self.getBrands()
 
-    def getBrandsCandleData(self,brands_list) -> pd.DataFrame:
+    def getBrandsCandleData(self,brands_list,chartTime) -> pd.DataFrame:
         # 空のDataFrameの作成
         df = pd.DataFrame(index=[], columns=brands_list)
 
         for brand in brands_list:
-            brand_candles = self.getCandleData(brand,"1h",480)
+            brand_candles = self.getCandleData(brand,chartTime,480)
             time.sleep(1)
             print(brand_candles['Close'])
             if len(brand_candles.index) != 0:
@@ -97,6 +107,10 @@ class Binance:
         # df.reset_index(drop=True ,inplace = True)
         # print(df.dtypes)
         # return df['symbol'].tolist()
+    
+    def changeTimeAxis(self,data) -> pd.DataFrame:
+        # 空のDataFrameの作成
+        print(data)
 
 
 if __name__ == '__main__':
@@ -106,14 +120,22 @@ if __name__ == '__main__':
     ['BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'BCCUSDT', 'NEOUSDT', 'LTCUSDT', 'QTUMUSDT', 'ADAUSDT', \
     'XRPUSDT', 'HOTUSDT', 'SHIBUSDT', 'TRUUSDT', 'XLMUSDT', 'LINKUSDT', 'TRXUSDT', 'ETCUSDT', \
     'BANDUSDT', 'DAIUSDT', 'FTMUSDT', 'XEMUSDT', 'ADAUSDT' , 'KSMUSDT']
+
+    # 15分足DataFrame
+
     # print(brands_list)
 
     binance = Binance()
     # df = binance.getCandleData("dsads","4h",5)
     # print(len(df.index) == 0)
-    print(binance.findBrand('ADAUSDT'))
+    # print(binance.findBrand('ADAUSDT'))
     # print(binance.getBrandsCandleData( ['IRISUSDT' , 'KSMUSDT']))
     # print(binance.getBrands())
-
+    
+    # 空のDataFrameの作成
+    print(pd.DataFrame(index=[], columns=brands_list))
+    '''
     while True:
-        
+        df_1h = binance.getBrandsCandleData(brands_list,'1h')
+        df_4h = 
+    '''
