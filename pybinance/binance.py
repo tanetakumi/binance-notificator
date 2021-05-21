@@ -63,6 +63,8 @@ class Binance:
         # print(df.columns)
         df.reset_index(drop=True ,inplace = True)
         # print(df.dtypes)
+        
+        print(df.transpose())
         return df
 
     def getCurrentBrandPrices(self,brands_list) -> pd.DataFrame:
@@ -70,7 +72,7 @@ class Binance:
         result_df = pd.DataFrame(index=[], columns=brands_list)
 
         df = self.getCurrentPrices()
-
+        
         # print(df.columns)
         df.reset_index(drop=True ,inplace = True)
         # print(df.dtypes)
@@ -97,7 +99,7 @@ class Binance:
         for brand in brands_list:
             brand_candles = self.getCandleData(brand,chartTime,480)
             time.sleep(1)
-            print(brand_candles['Close'])
+            # print(brand_candles['Close'])
             if len(brand_candles.index) != 0:
                 df[brand] = brand_candles['Close']
         
@@ -133,9 +135,35 @@ if __name__ == '__main__':
     # print(binance.getBrands())
     
     # 空のDataFrameの作成
-    print(pd.DataFrame(index=[], columns=brands_list))
+
+    data = pd.DataFrame(index=[], columns=brands_list)
+    # data2 = binance.getCurrentPrices()
+    # print(data2)
+    # data3 = binance.getBrandsCandleData(['IRISUSDT','KSMUSDT','BTCUSDT'],'4h')
+    # print(type(data2.index.values))
+    
+    # print(data2.iloc[-1])
+    # print(data3.iloc[-1]['BTCUSDT'])
+
+    res = requests.get("https://api.binance.com/api/v3/ticker/price")
+        
+    print(json.loads(json.dumps(res.json())))
+    # df = pd.read_json(json.dumps(res.json()))
+    
+    '''
+    for num in data2.index.values:
+        # print(data2.iat[num,0])
+        # print(type(num))
+        for brand in data.columns:
+            if data2.iat[num,0] == brand:
+                print(data2.iat[num,0],data2.iat[num,1])
+    '''
+
+    # print(data)
+
     '''
     while True:
         df_1h = binance.getBrandsCandleData(brands_list,'1h')
         df_4h = 
     '''
+
