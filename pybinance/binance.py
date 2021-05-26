@@ -1,4 +1,5 @@
 
+import notify
 import talib
 import sys
 import requests
@@ -7,36 +8,34 @@ import pandas as pd
 import json
 
 
-
-# vRsi = talib.RSI(dataFrame['Close'],14)
 class Binance:
 
-    def chartTimeToInteger(self,chartTime) -> int:
-        if chartTime == "1m":
+    def chart_time_to_integer(self,chart_time) -> int:
+        if chart_time == "1m":
             return 60
-        elif chartTime == "5m":
+        elif chart_time == "5m":
             return 300
-        elif chartTime == "15m":
+        elif chart_time == "15m":
             return 900
-        elif chartTime == "1h":
+        elif chart_time == "1h":
             return 3600
-        elif chartTime == "4h":
+        elif chart_time == "4h":
             return 14400
-        elif chartTime == "1d":
+        elif chart_time == "1d":
             return 86400
         else:
             return 0
 
 
-    def getCandleData(self,symbol,chartTime,num) -> pd.DataFrame:
-        chartTimeNum = self.chartTimeToInteger(chartTime)
-        if chartTimeNum == 0:
+    def getCandleData(self,symbol,chart_time,num) -> pd.DataFrame:
+        chart_time_number = self.chart_time_to_integer(chart_time)
+        if chart_time_number == 0:
             print("時間足入力エラー[1m,5m,15m,1h,4h,1d]")
             sys.exit()
         # print(chartTimeNum)
         # print(chartTimeNum*num)
-        stamps=int(time.time() - chartTimeNum*num)*1000
-        url="https://api.binance.com/api/v3/klines?symbol="+symbol+"&interval="+chartTime+"&startTime="+str(stamps)
+        stamps=int(time.time() - chart_time_number*num)*1000
+        url="https://api.binance.com/api/v3/klines?symbol="+symbol+"&interval="+chart_time+"&startTime="+str(stamps)
         res=requests.get(url)
 
         # DataFrameの作成
@@ -55,7 +54,7 @@ class Binance:
         return df
 
 
-    def getCurrentPrices(self) -> pd.DataFrame:
+    def get_current_prices(self) -> pd.DataFrame:
         res = requests.get("https://api.binance.com/api/v3/ticker/price")
         # DataFrameの作成
         df = pd.read_json(json.dumps(res.json()))
@@ -67,22 +66,22 @@ class Binance:
         print(df.transpose())
         return df
 
-    def getCurrentPricesList(self) -> list:
+    def get_current_price_list(self) -> list:
         res = requests.get("https://api.binance.com/api/v3/ticker/price")
         return res.json()
 
-    def getCurrentBrandPrices(self,brands_list) -> pd.DataFrame:
+    def get_current_brand_prices(self,brands_list) -> pd.DataFrame:
         # 結果保存
         result_df = pd.DataFrame(index=[], columns=brands_list)
 
-        df = self.getCurrentPrices()
+        df = self.get_current_prices()
         
         # print(df.columns)
         df.reset_index(drop=True ,inplace = True)
         # print(df.dtypes)
         return df
 
-    def getBrands(self) -> list:
+    def get_brands(self) -> list:
         res = requests.get("https://api.binance.com/api/v3/ticker/price")
         # DataFrameの作成
         df = pd.read_json(json.dumps(res.json()))
@@ -93,15 +92,15 @@ class Binance:
         # print(df.dtypes)
         return df['symbol'].tolist()
 
-    def findBrand(self,brand) -> bool:
-        return brand in self.getBrands()
+    def find_brand(self,brand) -> bool:
+        return brand in self.get_brands()
 
-    def getBrandsCandleData(self,brands_list,chartTime) -> pd.DataFrame:
+    def get_brands_candle_data(self,brands_list,chart_time) -> pd.DataFrame:
         # 空のDataFrameの作成
         df = pd.DataFrame(index=[], columns=brands_list)
 
         for brand in brands_list:
-            brand_candles = self.getCandleData(brand,chartTime,480)
+            brand_candles = self.getCandleData(brand,chart_time,480)
             time.sleep(1)
             # print(brand_candles['Close'])
             if len(brand_candles.index) != 0:
@@ -110,7 +109,7 @@ class Binance:
         return df
 
     def update(self,dataframe: pd.DataFrame) -> pd.DataFrame:
-        cur = self.getCurrentPricesList()
+        cur = self.get_current_price_list()
 
         for brand in dataframe.columns:
             for item in cur:
@@ -118,12 +117,7 @@ class Binance:
                     dataframe[brand].iat[-1] = item['price']
                     continue
     
-def getValueFromJson(json_data,brand):
-    value = None
-    for item in json_data:
-        if item['symbol'] == brand:
-            value = item['price']
-    return value
+
 
 if __name__ == '__main__':
 
@@ -136,14 +130,8 @@ if __name__ == '__main__':
 
     binance = Binance()
     # df = binance.getCandleData("dsads","4h",5)
-    # print(len(df.index) == 0)
-    # print(binance.findBrand('ADAUSDT'))
-    # print(binance.getBrandsCandleData( ['IRISUSDT' , 'KSMUSDT']))
-    # print(binance.getBrands())
-
-    # data2 = binance.getCurrentPrices()
-    # print(data2)
-    data3 = binance.getBrandsCandleData(['IRISUSDT','KSMUSDT','BTCUSDT'],'4h')
+    
+    data3 = binance.get_brands_candle_data(['IRISUSDT','KSMUSDT','BTCUSDT'],'4h')
     # print(type(data2.index.values))
     # print(data3)
     print(data3)
@@ -152,7 +140,12 @@ if __name__ == '__main__':
     binance.update(data3)
     # print(data3['BTCUSDT'].iat[-1])
     print(data3)
-    # = 
+    print(talib.RSI(data3['BTCUSDT'], timeperiod=14))
+
+    notice = notify.Notify()
+    notice.toDiscord("Hello")
+
+    
     # print(data2.iloc[-1])
     # print(data3.iloc[-1]['BTCUSDT'])
     # print(data3)
