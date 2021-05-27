@@ -5,10 +5,19 @@ import binance
 import datetime
 import time
 
-
+def mylog(text : str) -> None:
+    print("[Binance]"+datetime.datetime.now().strftime("%H:%M:%S")+" "+text)
 
 
 if __name__ == "__main__":
+
+    #　監視する通貨
+    brands_list = \
+    ['BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'NEOUSDT', 'LTCUSDT', 'QTUMUSDT', 'ADAUSDT', \
+    'XRPUSDT', 'HOTUSDT', 'SHIBUSDT', 'TRUUSDT', 'XLMUSDT', 'LINKUSDT', 'TRXUSDT', 'ETCUSDT', \
+    'BANDUSDT', 'FTMUSDT', 'XEMUSDT', 'KSMUSDT']
+    # test用　上書きリスト
+    # brands_list = ['BTCUSDT', 'ETHUSDT', 'BNBUSDT']
 
     binance_api = binance.Binance()
 
@@ -26,11 +35,10 @@ if __name__ == "__main__":
 
     while True:
         
-
         now = datetime.datetime.now()
         h = now.hour
         m = now.minute
-        time.sleep(1)
+        mylog("loop")
         
         if first_time:
             check_15m = True
@@ -38,21 +46,39 @@ if __name__ == "__main__":
             check_4h = True
             first_time = False
             
-            data15m = binance_api.
+            data15m = binance_api.get_brands_candle_data(brands_list,'15m')
+            print(data15m)
+            mylog("15min complete")
+            data1h = binance_api.get_brands_candle_data(brands_list,'1h')
+            print(data1h)
+            mylog("1h complete")
+            data4h = binance_api.get_brands_candle_data(brands_list,'4h')
+            print(data4h)
+            mylog("4h complete")
 
-            print("----Initalize----",now)
+            mylog("----Initalize----")
+
+        # + ------------------------------------------------------------ +
+        # | 毎回の関数                                                    |
+        # + ------------------------------------------------------------ +
+        binance_api.update(data15m,data1h,data4h)
+        print(data15m)
+        print(data1h)
+        print(data4h)
         
-        # 15分に一回関数
+        # + ------------------------------------------------------------ +
+        # | 回の関数　　                                                  |
+        # + ------------------------------------------------------------ +
         if m % 15 == 0:
             if not check_15m:
                 # something to do
-                
-                print("15")
+                data15m = binance_api.get_brands_candle_data(brands_list,'15m')
+                mylog("15m update complete")
                 check_15m = True
         else:
             check_15m = False
         
-        # 1時間に一回関数
+        # 1時間に一回関数---------------
         if m == 0:
             if not check_1h:
                 # something to do
@@ -61,7 +87,7 @@ if __name__ == "__main__":
         else:
             check_1h = False
 
-        # 4時間に一回関数
+        # 4時間に一回関数---------------
         if h % 4 == 0:
             if not check_4h:
                 # something to do
@@ -69,3 +95,6 @@ if __name__ == "__main__":
                 check_4h = True
         else:
             check_4h = False
+        
+        # loop　の休憩
+        time.sleep(5)
