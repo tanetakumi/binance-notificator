@@ -1,4 +1,5 @@
 
+import datetime
 import notify
 import talib
 import sys
@@ -27,7 +28,7 @@ class Binance:
             return 0
 
 
-    def getCandleData(self,symbol,chart_time,num) -> pd.DataFrame:
+    def get_candle_data(self,symbol,chart_time,num) -> pd.DataFrame:
         chart_time_number = self.chart_time_to_integer(chart_time)
         if chart_time_number == 0:
             print("時間足入力エラー[1m,5m,15m,1h,4h,1d]")
@@ -100,22 +101,28 @@ class Binance:
         df = pd.DataFrame(index=[], columns=brands_list)
 
         for brand in brands_list:
-            brand_candles = self.getCandleData(brand,chart_time,480)
-            time.sleep(1)
+            brand_candles = self.get_candle_data(brand,chart_time,480)
+            time.sleep(0.3)
             # print(brand_candles['Close'])
             if len(brand_candles.index) != 0:
                 df[brand] = brand_candles['Close']
         
         return df
 
-    def update(self,dataframe: pd.DataFrame) -> pd.DataFrame:
+    def update(self,*dataframe) -> pd.DataFrame:
         cur = self.get_current_price_list()
+        for df in dataframe:
+            for brand in df.columns:
+                print(brand)
+                for item in cur:
+                    if item['symbol'] == brand:
+                        df[brand].iat[-1] = item['price']
+                        break
 
-        for brand in dataframe.columns:
-            for item in cur:
-                if item['symbol'] == brand:
-                    dataframe[brand].iat[-1] = item['price']
-                    continue
+
+
+
+
     
 
 
