@@ -62,9 +62,7 @@ if __name__ == "__main__":
         # | 毎回の関数                                                    |
         # + ------------------------------------------------------------ +
         binance_api.update(data15m,data1h,data4h)
-        print(data15m)
-        print(data1h)
-        print(data4h)
+        # print(data4h)
         
         # + ------------------------------------------------------------ +
         # | 回の関数　　                                                  |
@@ -82,6 +80,7 @@ if __name__ == "__main__":
         if m == 0:
             if not check_1h:
                 # something to do
+                data1h = binance_api.get_brands_candle_data(brands_list,'1h')
                 print("1h")
                 check_1h = True
         else:
@@ -91,6 +90,7 @@ if __name__ == "__main__":
         if h % 4 == 0:
             if not check_4h:
                 # something to do
+                data4h = binance_api.get_brands_candle_data(brands_list,'4h')
                 print("4h")
                 check_4h = True
         else:
