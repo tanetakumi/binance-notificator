@@ -1,5 +1,6 @@
 
 import datetime
+import math
 import notify
 import talib
 import sys
@@ -72,8 +73,6 @@ class Binance:
         return res.json()
 
     def get_current_brand_prices(self,brands_list) -> pd.DataFrame:
-        # 結果保存
-        result_df = pd.DataFrame(index=[], columns=brands_list)
 
         df = self.get_current_prices()
         
@@ -113,12 +112,11 @@ class Binance:
         cur = self.get_current_price_list()
         for df in dataframe:
             for brand in df.columns:
-                print(brand)
                 for item in cur:
                     if item['symbol'] == brand:
-                        df[brand].iat[-1] = item['price']
+                        if not math.isnan(df[brand].iat[-1]):
+                            df[brand].iat[-1] = item['price']
                         break
-
 
 
 
